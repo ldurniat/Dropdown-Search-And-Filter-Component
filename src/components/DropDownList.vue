@@ -1,42 +1,39 @@
-<script>
-export default {
-    data() {
-        return {
-            searchQuery: '',
-            selectedItem: null,
-            isVisible: false,
-            userArray: []
-        }
-    },
-    mounted() {
-        fetch( "https://jsonplaceholder.typicode.com/users" )
+<script setup>
+
+import { ref, onMounted, computed } from 'vue';
+
+let searchQuery  = ref( '' );
+let selectedItem = ref( null );
+let isVisible    = ref( false );
+let userArray    = ref( [] );
+
+onMounted( () => {
+    fetch( "https://jsonplaceholder.typicode.com/users" )
         .then( reponse => reponse.json() )
         .then( json => {
             console.log( json );
-            this.userArray = json;
+            userArray.value = json;
         } )
-    },
-    methods: {
-        selectItem( user ) {
-            this.selectedItem = user;
-            this.isVisible    = false;
-        }
-    },
-    computed: {
-        filteredUsers() {
-            const query = this.searchQuery.toLowerCase();
-            if ( query === "" ) {
-                return this.userArray;
-            }
+})
 
-            return this.userArray.filter( ( user ) => {
-                return Object.values( user ).some( ( word ) =>
-                    String( word ).toLowerCase().includes( query ) 
-                );
-            } );
-        }
-    }
+function selectItem( user ) {
+    selectedItem.value = user;
+    isVisible.value    = false;
 }
+
+const filteredUsers = computed( () => {
+    const query = searchQuery.value.toLowerCase();
+    if ( query === "" ) {
+        return userArray.value;
+    }
+
+    return userArray.value.filter( ( user ) => {
+        return Object.values( user ).some( ( word ) =>
+            String( word ).toLowerCase().includes( query ) 
+        );
+    } );
+})
+
 </script>
 
 <template>
