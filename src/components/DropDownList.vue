@@ -36,8 +36,8 @@ const filteredUsers = computed( () => {
 </script>
 
 <template>
-    <div class="dropdown-wrapper">
-        <selection>
+    <div>
+        <section class="dropdown-wrapper">
             <div @click="isVisible = !isVisible" class="selected-item">
                 <span v-if="selectedItem">{{ selectedItem.name }}</span>
                 <span v-else> Selected User </span>
@@ -62,7 +62,7 @@ const filteredUsers = computed( () => {
                     </ul>
                 </div>
             </div>
-        </selection>   
+        </section>   
     </div>
 </template>
 
