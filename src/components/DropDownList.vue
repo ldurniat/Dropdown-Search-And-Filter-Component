@@ -5,29 +5,29 @@ import { ref, onMounted, computed } from 'vue';
 let searchQuery  = ref( '' );
 let selectedItem = ref( null );
 let isVisible    = ref( false );
-let userArray    = ref( [] );
+let itemArray    = ref( [] );
 
 onMounted( () => {
     fetch( "https://jsonplaceholder.typicode.com/users" )
         .then( reponse => reponse.json() )
         .then( json => {
-            userArray.value = json;
+            itemArray.value = json;
         } )
 })
 
-function selectItem( user ) {
-    selectedItem.value = user;
+function selectItem( item ) {
+    selectedItem.value = item;
     isVisible.value    = false;
 }
 
-const filteredUsers = computed( () => {
+const filteredItems = computed( () => {
     const query = searchQuery.value.toLowerCase();
     if ( query === "" ) {
-        return userArray.value;
+        return itemArray.value;
     }
 
-    return userArray.value.filter( ( user ) => {
-        return Object.values( user ).some( ( word ) =>
+    return itemArray.value.filter( ( item ) => {
+        return Object.values( item ).some( ( word ) =>
             String( word ).toLowerCase().includes( query ) 
         );
     } );
@@ -40,7 +40,7 @@ const filteredUsers = computed( () => {
         <section class="dropdown-wrapper">
             <div @click="isVisible = !isVisible" class="selected-item">
                 <span v-if="selectedItem">{{ selectedItem.name }}</span>
-                <span v-else> Selected User </span>
+                <span v-else> Selected Item </span>
                 <svg 
                     :class="isVisible ? 'dropdown' : ''"
                     class="drop-down-icon"
@@ -52,12 +52,12 @@ const filteredUsers = computed( () => {
                     <path d="M11.9997 10.8284L7.04996 15.7782L5.63574 14.364L11.9997 8L18.3637 14.364L16.9495 15.7782L11.9997 10.8284Z"></path></svg>
             </div>
             <div :class="isVisible ? 'visible' : 'invisible'" class="dropdown-popover">
-                <input v-model="searchQuery" type="text" placeholder="Search for User">
-                <span v-if="filteredUsers.length == 0 "> No Data Available</span>
+                <input v-model="searchQuery" type="text" placeholder="Search for Item">
+                <span v-if="filteredItems.length == 0 "> No Data Available</span>
                 <div class="options">
                     <ul>
-                        <li @click="selectItem(user)" v-for="(user, index) in filteredUsers" :key="index">
-                        {{ user.name }}
+                        <li @click="selectItem(item)" v-for="(item, index) in filteredItems" :key="index">
+                        {{ item.name }}
                         </li>
                     </ul>
                 </div>
